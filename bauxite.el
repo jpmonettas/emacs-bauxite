@@ -94,7 +94,8 @@
   `((,(kbd "C-c j") . bxt-switch-to-js)
     (,(kbd "C-c g") . bxt-switch-to-groovy)
     (,(kbd "C-c s") . bxt-switch-to-style)
-    (,(kbd "C-c t") . bxt-switch-to-template)))
+    (,(kbd "C-c t") . bxt-switch-to-template)
+    (,(kbd "C-c C-c") . bxt-select-component)))
 
 
 
@@ -103,3 +104,21 @@
     (candidates . component-candidates)
     (pattern-transformer . (lambda (pattern) (regexp-quote pattern)))
     (action . identity)))
+
+
+(defun bxt-select-component ()
+  (interactive)
+  (helm :sources 'bxt-opened-components-buffers
+        :buffer "*opened components*"
+        :keymap helm-buffer-map
+        :truncate-lines t))
+
+
+(setq bxt-opened-components-buffers
+  `((name . "Opened Components")
+    (candidates . (lambda ()
+                    (loop for buff in (helm-buffer-list)
+                          when (string-match "TEMPLATE" buff)
+                          collect buff)))
+    (type . buffer)
+    (keymap . ,helm-buffer-map)))
