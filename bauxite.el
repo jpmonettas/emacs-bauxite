@@ -9,7 +9,6 @@
 (defun unescape-tab (str) (replace-regexp-in-string "\\\\t" "\t" str))
 (defun unescape-/ (str) (replace-regexp-in-string "\\\\/" "/" str))
 
-;;Simple comment
 (defun bxt-find-code (page-html type)
   (with-temp-buffer
        (goto-char (point-min))
@@ -34,7 +33,9 @@
                ((equal type :style) (css-mode))
                ((equal type :javascript) (js2-mode))
                ((equal type :template) (html-mode)))
+         (bxt-mode)
          (goto-char (point-min))))
+
 
 (defun bxt-get-component (cn)
   (setq bxt-cn cn)
