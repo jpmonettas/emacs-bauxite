@@ -10,20 +10,22 @@
 (defun unescape-/ (str) (replace-regexp-in-string "\\\\/" "/" str))
 
 (defun bxt-find-code (page-html type)
-  (with-temp-buffer
-       (goto-char (point-min))
-       (insert page-html)
-       (goto-char (point-min))
-       (search-forward (format  "%sCodeAttributes['%sCode'].value = " type type) nil nil 2)
-       (set-mark (point))
-       (end-of-line)
-       (unescape-creturn
-        (unescape-doublequote
-         (unescape-quote
-          (unescape-newline
-           (unescape-/
-            (unescape-tab
-             (buffer-substring-no-properties (incf (mark)) (- (point) 2))))))))))
+  (condition-case nil
+      (with-temp-buffer
+        (goto-char (point-min))
+        (insert page-html)
+        (goto-char (point-min))
+        (search-forward (format  "%sCodeAttributes['%sCode'].value = " type type) nil nil 2)
+        (set-mark (point))
+        (end-of-line)
+        (unescape-creturn
+         (unescape-doublequote
+          (unescape-quote
+           (unescape-newline
+            (unescape-/
+             (unescape-tab
+              (buffer-substring-no-properties (incf (mark)) (- (point) 2)))))))))
+    (error "")))
 
 (defun bxt-create-buffer (name data type)
   (with-current-buffer (get-buffer-create name)
